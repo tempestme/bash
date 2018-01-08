@@ -2,8 +2,8 @@ package com.example.pavel.bash;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pavel.bash.model.Api;
@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<Post> posts;
     private Retrofit retrofit;
-    private TextView textView;
+    private RecyclerView recyclerView;
     private String fineText;
 
     @Override
@@ -31,14 +31,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         posts = new ArrayList<>();
-        textView = (TextView)findViewById(R.id.shutkaTV);
 
         retrofit = new Retrofit.Builder().baseUrl(Api.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         Api api = retrofit.create(Api.class);
-        Call<List<Post>> call = api.getPosts();
+        Call<List<Post>> call = api.getPosts("bash.im", 100);
 
         call.enqueue(new Callback<List<Post>>() {
             @Override
@@ -46,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"Ahahaha nakanetsta",Toast.LENGTH_SHORT).show();
                 posts = response.body();
                 fineText = posts.get(1).getElementPureHtml().replaceAll(Pattern.quote("<br />"),"");
-                textView.setText(fineText);
 
             }
 
