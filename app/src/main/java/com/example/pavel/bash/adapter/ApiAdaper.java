@@ -10,6 +10,7 @@ import com.example.pavel.bash.R;
 import com.example.pavel.bash.model.Post;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Created by pavel on 08.01.18.
@@ -18,6 +19,7 @@ import java.util.List;
 public class ApiAdaper extends RecyclerView.Adapter<ApiAdaper.customViewHolder> {
 
     List<Post> posts;
+    String fineText;
 
     public ApiAdaper(List<Post> posts) {
         this.posts = posts;
@@ -28,12 +30,15 @@ public class ApiAdaper extends RecyclerView.Adapter<ApiAdaper.customViewHolder> 
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.post_item, null);
 
-        return new customViewHolder;
+        return new customViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(customViewHolder holder, int position) {
-        holder.PostText.setText(posts.get(position).getElementPureHtml());
+        fineText = posts.get(position).getElementPureHtml().replaceAll(Pattern.quote("<br />"),"");
+        holder.PostText.setText(fineText.replaceAll(Pattern.quote("&quot;"),""));
+//        holder.PostText.setText(posts.get(position).getElementPureHtml());
+
     }
 
     @Override
