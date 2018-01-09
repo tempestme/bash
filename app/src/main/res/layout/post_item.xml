@@ -2,16 +2,23 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:minHeight="75dp"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    app:cardElevation="5dp"
+    app:cardCornerRadius="10dp"
+    app:cardBackgroundColor="@color/cardview_light_background"
+    android:elevation="1dp"
+    app:cardUseCompatPadding="true"
+    app:cardPreventCornerOverlap="false"
+    app:cardMaxElevation="1dp">
     <TextView
         android:id="@+id/postTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:text="Simple text\nfew lines \njust for demonstration of my superiority"
         android:paddingLeft="8dp"
-        android:paddingRight="8dp"/>
-
+        android:paddingRight="8dp" />
 
 </android.support.v7.widget.CardView>
