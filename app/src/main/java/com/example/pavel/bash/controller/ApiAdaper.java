@@ -1,4 +1,4 @@
-package com.example.pavel.bash.adapter;
+package com.example.pavel.bash.controller;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,9 +12,7 @@ import com.example.pavel.bash.model.Post;
 import java.util.List;
 import java.util.regex.Pattern;
 
-/**
- * Created by pavel on 08.01.18.
- */
+
 
 public class ApiAdaper extends RecyclerView.Adapter<ApiAdaper.customViewHolder> {
 
@@ -38,7 +36,6 @@ public class ApiAdaper extends RecyclerView.Adapter<ApiAdaper.customViewHolder> 
         fineText = posts.get(position).getElementPureHtml().replaceAll(Pattern.quote("<br />"),"");
         holder.PostText.setText(fineText.replaceAll(Pattern.quote("&quot;"),""));
 //        holder.PostText.setText(posts.get(position).getElementPureHtml());
-
     }
 
     @Override

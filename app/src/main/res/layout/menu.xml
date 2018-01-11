@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="35dp">
+    <item
+        android:id="@+id/bash.im"
+        android:title="bash.im"
+        />
+    <item
+        android:id="@+id/zadolba.li"
+        android:title="zadolba.li"
+        />
+    <item
+        android:id="@+id/anekdot.ru"
+        android:title="anekdot.ru"
+        />
+    <item
+        android:id="@+id/ideer.ru"
+        android:title="indeer.ru"
+        />
+    <item
+        android:id="@+id/det.org.ru"
+        android:title="det.org.ru"
+        />
+    <item
+        android:id="@+id/xkcdb.com"
+        android:title="xkcdb.com"
+        />
+</menu>

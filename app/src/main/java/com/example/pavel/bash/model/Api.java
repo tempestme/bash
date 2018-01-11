@@ -1,6 +1,6 @@
 package com.example.pavel.bash.model;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -16,6 +16,6 @@ public interface Api {
     //"http://www.umori.li/api/get?site=bash.im&name=bash&num=50"
 
     @GET("api/get")
-    Call<List<Post>> getPosts(@Query("site")String site, @Query("num")int num);
+    Call<ArrayList<Post>> getPosts(@Query("site")String site, @Query("num")int num);
 
 }
