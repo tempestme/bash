@@ -1,5 +1,6 @@
 package com.example.pavel.bash;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,7 +11,10 @@ import android.widget.Toast;
 import com.example.pavel.bash.controller.ApiAdaper;
 import com.example.pavel.bash.model.Api;
 import com.example.pavel.bash.model.Post;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -25,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     private static ArrayList<Post> newPosts;
     private Retrofit retrofit;
     private RecyclerView recyclerView;
-    private String fineText;
     private RecyclerView.LayoutManager layoutManager;
     private ApiAdaper apiAdaper;
 
@@ -52,57 +55,35 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<ArrayList<Post>>() {
             @Override
             public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
-                Toast.makeText(getApplicationContext(),"Ahahaha nakanetsta",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(),"Ahahaha nakanetsta",Toast.LENGTH_SHORT).show();
                 newPosts = response.body();
                 post.addNewPosts(posts,newPosts);
                 apiAdaper = new ApiAdaper(posts);
                 recyclerView.setAdapter(apiAdaper);
-
-
             }
 
             @Override
             public void onFailure(Call<ArrayList<Post>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),"loh, pidor, failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"check internet connection", Toast.LENGTH_SHORT).show();
                 Log.e("failure",t.toString());
             }
         });
-
-
-        ArrayList<String> list1 = new ArrayList<>();
-        list1.add("loh");
-        list1.add("pidr");
-        list1.add("netdruzey1");
-        list1.add("ahahahsukaaaa");
-        list1.add("ebal");
-        list1.add("tvoy");
-
-        ArrayList<String> list2 = new ArrayList<>();
-        list2.add("pizdec");
-        list2.add("vashe");
-        list2.add("shto");
-        list2.add("za");
-        list2.add("loh");
-        list2.add("pidr");
-
-        addNewPosts(list1,list2);
-
-        for(int i=0;i<list1.size();i++){
-            Log.e("listtest",list1.get(i));
-        }
-
-
-
-
+    }
+    public void saveData(){
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(posts);
+        editor.putString("task lists", json);
+        editor.apply();
     }
 
-    public void addNewPosts(ArrayList<String> mainList, ArrayList<String> newPosts){
-        newPosts.removeAll(mainList);
-        ArrayList<String> allPosts = new ArrayList<String>();
-        allPosts.addAll(newPosts);
-        allPosts.addAll(mainList);
-        mainList.clear();
-        mainList.addAll(allPosts);
+    public void loadData(){
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("taskk list", null);
+        Type type = new TypeToken<ArrayList<Post>>(){}.getType();
+        posts = gson.fromJson(json, type);
     }
 
 }
