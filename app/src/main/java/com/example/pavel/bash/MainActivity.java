@@ -38,11 +38,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         final Post post = new Post();
 
-        posts = new ArrayList<>();
+        posts = new ArrayList<Post>();
+        loadData(posts);
+
         newPosts = new ArrayList<>();
         recyclerView = (RecyclerView)findViewById(R.id.postRecyclerView);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+        apiAdaper = new ApiAdaper(posts);
+        recyclerView.setAdapter(apiAdaper);
+
+
 
 
         retrofit = new Retrofit.Builder().baseUrl(Api.BASE_URL)
@@ -58,8 +64,11 @@ public class MainActivity extends AppCompatActivity {
                 //Toast.makeText(getApplicationContext(),"Ahahaha nakanetsta",Toast.LENGTH_SHORT).show();
                 newPosts = response.body();
                 post.addNewPosts(posts,newPosts);
-                apiAdaper = new ApiAdaper(posts);
-                recyclerView.setAdapter(apiAdaper);
+                saveData();
+                apiAdaper.notifyDataSetChanged();
+
+
+
             }
 
             @Override
@@ -69,6 +78,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onPause() {
+        saveData();
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        saveData();
+        super.onStop();
+    }
+
     public void saveData(){
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -78,12 +100,23 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
     }
 
-    public void loadData(){
+
+
+    public void loadData(ArrayList<Post> posts){
+        ArrayList<Post> savedPosts;
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedPreferences.getString("taskk list", null);
         Type type = new TypeToken<ArrayList<Post>>(){}.getType();
         posts = gson.fromJson(json, type);
+
+
+        if(posts == null){
+            posts = new ArrayList<>();
+        }
+
     }
+
+
 
 }
