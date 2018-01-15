@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.example.pavel.bash.controller.ApiAdaper;
 import com.example.pavel.bash.model.Api;
+import com.example.pavel.bash.model.DataController;
 import com.example.pavel.bash.model.Post;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -31,22 +32,26 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private ApiAdaper apiAdaper;
+    private DataController dataController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final Post post = new Post();
+        dataController = new DataController();
 
-        //posts = new ArrayList<Post>();
         loadData();
-        posts.add(new Post("bash","bash.im", "welcome to bash"));
+        Log.e("list size", Integer.toString(posts.size()));
+        if (posts.size()==0){
+            posts.add(new Post("welcome to bash reader"));
+        }
 
         newPosts = new ArrayList<>();
         recyclerView = (RecyclerView)findViewById(R.id.postRecyclerView);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        apiAdaper = new ApiAdaper(posts);
+        apiAdaper = new ApiAdaper(posts, dataController);
         recyclerView.setAdapter(apiAdaper);
         apiAdaper.notifyDataSetChanged();
 
@@ -65,9 +70,9 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
                 //Toast.makeText(getApplicationContext(),"successfull",Toast.LENGTH_SHORT).show();
                 newPosts = response.body();
-                post.addNewPosts(posts,newPosts);
-                saveData();
+                dataController.mergeArrayLists(posts,newPosts);
                 apiAdaper.notifyDataSetChanged();
+                saveData();
                 Log.e("api", "api successfull response");
 
 
@@ -90,17 +95,17 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        saveData();
         super.onStop();
     }
 
     public void saveData(){
+        Log.e("list","saved data size is: "+Integer.toString(posts.size()));
         SharedPreferences sharedPreferences = getSharedPreferences("PREFS", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Gson gson = new Gson();
         String json = gson.toJson(posts);
         editor.putString("list", json);
-        //editor.apply();
+        //editor.apply(); //it's async - and don't fit in this case
         //Log.e("json","Save is: "+ json);
         editor.commit();
     }
@@ -108,12 +113,18 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void loadData(){
-        ArrayList<Post> savedPosts;
         SharedPreferences sharedPreferences = getSharedPreferences("PREFS", MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedPreferences.getString("list", null);
         Type type = new TypeToken<ArrayList<Post>>(){}.getType();
         posts = gson.fromJson(json, type);
+        try{
+            Log.e("list","loaded data size is: "+Integer.toString(posts.size()));
+        }
+        catch (Throwable throwable){
+            Log.e("list","loaded data size is: null");
+        }
+
 
         //Log.e("json","Load is: "+posts.get(2).getElementPureHtml());
 

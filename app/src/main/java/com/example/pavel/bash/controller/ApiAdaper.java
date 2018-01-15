@@ -7,20 +7,22 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.pavel.bash.R;
+import com.example.pavel.bash.model.DataController;
 import com.example.pavel.bash.model.Post;
 
 import java.util.List;
-import java.util.regex.Pattern;
 
 
 
 public class ApiAdaper extends RecyclerView.Adapter<ApiAdaper.customViewHolder> {
 
     List<Post> posts;
-    String fineText;
+    DataController dataController;
 
-    public ApiAdaper(List<Post> posts) {
+    public ApiAdaper(List<Post> posts, DataController dataController) {
         this.posts = posts;
+        this.dataController = dataController;
+
     }
 
     @Override
@@ -33,9 +35,8 @@ public class ApiAdaper extends RecyclerView.Adapter<ApiAdaper.customViewHolder> 
 
     @Override
     public void onBindViewHolder(customViewHolder holder, int position) {
-        fineText = posts.get(position).getElementPureHtml().replaceAll(Pattern.quote("<br />"),"");
-        holder.PostText.setText(fineText.replaceAll(Pattern.quote("&quot;"),""));
-//        holder.PostText.setText(posts.get(position).getElementPureHtml());
+        holder.PostText.setText(dataController.returnClear(posts.get(position).getElementPureHtml()));
+
     }
 
     @Override
