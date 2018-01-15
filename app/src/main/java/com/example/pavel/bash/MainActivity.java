@@ -38,8 +38,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         final Post post = new Post();
 
-        posts = new ArrayList<Post>();
-        loadData(posts);
+        //posts = new ArrayList<Post>();
+        loadData();
+        posts.add(new Post("bash","bash.im", "welcome to bash"));
 
         newPosts = new ArrayList<>();
         recyclerView = (RecyclerView)findViewById(R.id.postRecyclerView);
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         apiAdaper = new ApiAdaper(posts);
         recyclerView.setAdapter(apiAdaper);
+        apiAdaper.notifyDataSetChanged();
 
 
 
@@ -61,11 +63,12 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<ArrayList<Post>>() {
             @Override
             public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
-                //Toast.makeText(getApplicationContext(),"Ahahaha nakanetsta",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(),"successfull",Toast.LENGTH_SHORT).show();
                 newPosts = response.body();
                 post.addNewPosts(posts,newPosts);
                 saveData();
                 apiAdaper.notifyDataSetChanged();
+                Log.e("api", "api successfull response");
 
 
 
@@ -74,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<ArrayList<Post>> call, Throwable t) {
                 Toast.makeText(getApplicationContext(),"check internet connection", Toast.LENGTH_SHORT).show();
-                Log.e("failure",t.toString());
+                Log.e("api response failure",t.toString());
             }
         });
     }
@@ -92,23 +95,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void saveData(){
-        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("PREFS", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Gson gson = new Gson();
         String json = gson.toJson(posts);
-        editor.putString("task lists", json);
-        editor.apply();
+        editor.putString("list", json);
+        //editor.apply();
+        //Log.e("json","Save is: "+ json);
+        editor.commit();
     }
 
 
 
-    public void loadData(ArrayList<Post> posts){
+    public void loadData(){
         ArrayList<Post> savedPosts;
-        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("PREFS", MODE_PRIVATE);
         Gson gson = new Gson();
-        String json = sharedPreferences.getString("taskk list", null);
+        String json = sharedPreferences.getString("list", null);
         Type type = new TypeToken<ArrayList<Post>>(){}.getType();
         posts = gson.fromJson(json, type);
+
+        //Log.e("json","Load is: "+posts.get(2).getElementPureHtml());
 
 
         if(posts == null){
