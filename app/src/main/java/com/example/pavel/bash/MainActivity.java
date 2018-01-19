@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import com.example.pavel.bash.controller.ApiAdaper;
 import com.example.pavel.bash.model.Api;
-import com.example.pavel.bash.model.DataController;
+import com.example.pavel.bash.controller.DataController;
 import com.example.pavel.bash.model.Post;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -63,14 +63,15 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         Api api = retrofit.create(Api.class);
-        Call<ArrayList<Post>> call = api.getPosts("bash.im", 100);
+        Call<ArrayList<Post>> call = api.getPosts("bash.im","random", 100);
 
         call.enqueue(new Callback<ArrayList<Post>>() {
             @Override
             public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
                 //Toast.makeText(getApplicationContext(),"successfull",Toast.LENGTH_SHORT).show();
-                newPosts = response.body();
-                dataController.mergeArrayLists(posts,newPosts);
+                posts.clear();
+                posts.addAll(response.body());
+                //dataController.mergeArrayLists(posts,newPosts);
                 apiAdaper.notifyDataSetChanged();
                 saveData();
                 Log.e("api", "api successfull response");

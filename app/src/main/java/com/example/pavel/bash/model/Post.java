@@ -5,10 +5,7 @@ package com.example.pavel.bash.model;
  */
 
 public class Post {
-//    String site;
-//    String name;
-//    String desc;
-//    String link;
+
     String elementPureHtml;
 
     public Post(String elementPureHtml) {
@@ -20,21 +17,6 @@ public class Post {
 
     }
 
-//    public String getSite() {
-//        return site;
-//    }
-//
-//    public String getName() {
-//        return name;
-//    }
-
-//    public String getDesc() {
-//        return desc;
-//    }
-//
-//    public String getLink() {
-//        return link;
-//    }
 
     public String getElementPureHtml() {
         return elementPureHtml;

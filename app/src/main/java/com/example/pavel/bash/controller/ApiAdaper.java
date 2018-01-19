@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.pavel.bash.R;
-import com.example.pavel.bash.model.DataController;
 import com.example.pavel.bash.model.Post;
 
 import java.util.List;
