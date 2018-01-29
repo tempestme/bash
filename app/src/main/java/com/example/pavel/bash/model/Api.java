@@ -1,36 +1,58 @@
 package com.example.pavel.bash.model;
 
+import android.util.Log;
+
+import com.example.pavel.bash.controller.ApiAdaper;
+
 import java.util.ArrayList;
 
 import retrofit2.Call;
-import retrofit2.http.GET;
-import retrofit2.http.Query;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by pavel on 02.01.18.
+ * Created by pavel on 29.01.18.
  */
 
-public interface Api {
-    public static String BASE_URL = "http://umorili.herokuapp.com/";
+public class Api {
 
-    //"http://www.umori.li/api/get?site=bash.im&name=bash&num=50"
+    private Call<ArrayList<Post>> call;
 
-    /**
-     *
-     * @param name
-     *             name can recieve diffirent parameters
-     *             Deti for det.org.ru
-     *             ideer for ideer.ru
-     *             zadolbali for zadolba.li
-     *             bash/abyss/random for bash.im and for "name" parametrs there is abyss/bash
-     *             XKCDB for XKCDB.com
-     *             new anekdot for anekdot.ru
-     *             random for random quotes
-     *
-     * @param num
-     * @return
-     */
-    @GET("api/get")
-    Call<ArrayList<Post>> getPosts(@Query("site")String site, @Query("name")String name, @Query("num")int num);
+    public Api(String site, String name) {
+
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(ApiInterface.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ApiInterface api = retrofit.create(ApiInterface.class);
+        this.call = api.getPosts(site, name, 100);
+    }
+
+
+    public void makeCall(final ArrayList<Post> posts, final ApiAdaper adapter){
+        call.enqueue(new Callback<ArrayList<Post>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
+                //Toast.makeText(getApplicationContext(),"successfull",Toast.LENGTH_SHORT).show();
+
+                posts.clear();
+                posts.addAll(response.body());
+                adapter.notifyDataSetChanged();
+                Log.e("api", "api successfull response");
+
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Post>> call, Throwable t) {
+                //Toast.makeText(getApplicationContext(),"check internet connection", Toast.LENGTH_SHORT).show();
+                Log.e("api response failure",t.toString());
+            }
+        });
+    }
+
+    public void fuckit(){
+
+    }
 
 }
