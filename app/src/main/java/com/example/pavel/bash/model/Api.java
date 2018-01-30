@@ -29,8 +29,19 @@ public class Api {
         this.call = api.getPosts(site, name, 100);
     }
 
+    public Api(String site) {
 
-    public void makeCall(final ArrayList<Post> posts, final ApiAdaper adapter){
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(ApiInterface.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ApiInterface api = retrofit.create(ApiInterface.class);
+        this.call = api.getPosts(site, 100);
+    }
+
+
+
+
+    public void getPosts(final ArrayList<Post> posts, final ApiAdaper adapter){
         call.enqueue(new Callback<ArrayList<Post>>() {
             @Override
             public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
@@ -49,10 +60,6 @@ public class Api {
                 Log.e("api response failure",t.toString());
             }
         });
-    }
-
-    public void fuckit(){
-
     }
 
 }

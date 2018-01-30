@@ -33,4 +33,7 @@ public interface ApiInterface {
     @GET("api/get")
     Call<ArrayList<Post>> getPosts(@Query("site")String site, @Query("name")String name, @Query("num")int num);
 
+    @GET("api/get")
+    Call<ArrayList<Post>> getPosts(@Query("site")String site, @Query("num")int num);
+
 }

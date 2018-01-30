@@ -50,9 +50,16 @@ public class DataController {
         mainPosts.clear();
 
     }
-    public void saveData(ArrayList<Post> posts, Context context){
+
+
+    /**
+     * @param posts - ArrayList that will be saved to sharedPreferences
+     * @param key - key for saving and loading data
+     * @param context - have no idea
+     */
+    public void saveData(ArrayList<Post> posts,String key, Context context){
         Log.e("list","saved data size is: "+Integer.toString(posts.size()));
-        SharedPreferences sharedPreferences = context.getSharedPreferences("PREFS", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(key, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Gson gson = new Gson();
         String json = gson.toJson(posts);
@@ -60,8 +67,15 @@ public class DataController {
         editor.commit();
     }
 
-    public void loadData(ArrayList<Post> posts, Context context){
-        SharedPreferences sharedPreferences = context.getSharedPreferences("PREFS", MODE_PRIVATE);
+
+    /**
+     * method loads data from SharedPreferences or initialize ArrayList if there is nothing to load.
+     * @param posts - ArrayList that will be saved to sharedPreferences
+     * @param key - key for saving and loading data
+     * @param context - have no idea
+     */
+    public void loadData(ArrayList<Post> posts, String key, Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(key, MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedPreferences.getString("list", null);
         Type type = new TypeToken<ArrayList<Post>>(){}.getType();
@@ -69,8 +83,8 @@ public class DataController {
         //Log.e("json","Load is: "+posts.get(2).getElementPureHtml());
 
 
-        if(posts == null){
-            posts = new ArrayList<>();
+        if(posts.isEmpty()){
+            posts.add(new Post("welcome to bash app"));
         }
 
     }
